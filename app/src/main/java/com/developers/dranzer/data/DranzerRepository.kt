@@ -3,10 +3,12 @@ package com.developers.dranzer.data
 import com.developers.dranzer.MqttEventsListener
 import com.developers.dranzer.MqttManager
 import com.developers.dranzer.MqttManagerImpl.ConnectionStatus
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
 
 class DranzerRepository(private val mqttManager: MqttManager) : MqttEventsListener {
 
-    fun setState(device: Devices, state: DeviceState) {
+    fun setState(device: Devices, state: DeviceState): Single<StateEvent> {
         val isConnected = mqttManager.isConnected()
         if (!isConnected) {
             mqttManager.init()
@@ -19,7 +21,10 @@ class DranzerRepository(private val mqttManager: MqttManager) : MqttEventsListen
                 }
             }
         }
-        mqttManager.sendMessage(state, device.getTopic())
+        return Completable.fromCallable { mqttManager.sendMessage(state, device.getTopic()) }
+            .toSingle { Unit }
+            .map<StateEvent> { StateEvent.StateSetComplete }
+            .onErrorReturn { StateEvent.StateSetFailure(it) }
     }
 
     companion object {
@@ -39,7 +44,8 @@ class DranzerRepository(private val mqttManager: MqttManager) : MqttEventsListen
         TODO("Not yet implemented")
     }
 
-    override fun onSendMessageFailure(exception: Throwable) {
-        TODO("Not yet implemented")
+    sealed class StateEvent {
+        object StateSetComplete : StateEvent()
+        data class StateSetFailure(val exception: Throwable) : StateEvent()
     }
 }

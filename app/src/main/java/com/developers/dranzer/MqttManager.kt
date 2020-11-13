@@ -11,7 +11,6 @@ interface MqttEventsListener {
     fun onConnectionLost(throwable: Throwable)
     fun onConnectionSuccess(onConnectAction: (status: ConnectionStatus) -> Unit)
     fun onConnectionFailure(exception: Throwable)
-    fun onSendMessageFailure(exception: Throwable)
 }
 
 interface MqttManager {
@@ -42,7 +41,7 @@ class MqttManagerImpl(
                 mqttEventListener.onConnectionLost(cause)
             }
 
-            override fun deliveryComplete(token: IMqttDeliveryToken?) {}
+            override fun deliveryComplete(token: IMqttDeliveryToken?) { }
         })
     }
 
@@ -67,15 +66,11 @@ class MqttManagerImpl(
     }
 
     override fun sendMessage(message: Any, topic: String) {
-        try {
-            val messageByteArray = getMessageBytes(message)
-            val mqttMessage = MqttMessage().apply {
-                payload = messageByteArray
-            }
-            mqttAndroidClient.publish(topic, mqttMessage)
-        } catch (exception: Exception) {
-            mqttEventListener.onSendMessageFailure(exception)
+        val messageByteArray = getMessageBytes(message)
+        val mqttMessage = MqttMessage().apply {
+            payload = messageByteArray
         }
+        mqttAndroidClient.publish(topic, mqttMessage)
     }
 
     override fun isConnected(): Boolean {
