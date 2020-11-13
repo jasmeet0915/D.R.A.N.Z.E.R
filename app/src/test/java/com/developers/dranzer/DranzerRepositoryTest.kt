@@ -15,7 +15,7 @@ class DranzerRepositoryTest {
     private val dranzerRepository = DranzerRepository(mqttManager)
 
     @Test
-    fun `when device state are being set, manager is initialized and connection is established if not done`() {
+    fun `when device state is set, manager is initialized and connection is established if not done`() {
         // given
         val device = Devices.ALEXA
         val state = DeviceState.ON
@@ -33,5 +33,22 @@ class DranzerRepositoryTest {
         verify(mqttManager).init()
         verify(mqttManager).connect(eq(USERNAME), eq(PASSWORD), any())
         verify(mqttManager).sendMessage(state, device.getTopic())
+    }
+
+    @Test
+    fun `when manager is already connected never call init and connect and send message directly`() {
+        // given
+        val device = Devices.ALEXA
+        val deviceState = DeviceState.ON
+        whenever(mqttManager.isConnected()).thenReturn(true)
+
+        // when
+        dranzerRepository.setState(device, deviceState)
+
+        //
+        verify(mqttManager).isConnected()
+        verify(mqttManager, never()).init()
+        verify(mqttManager, never()).connect(eq(USERNAME), eq(PASSWORD), any())
+        verify(mqttManager).sendMessage(deviceState, device.getTopic())
     }
 }
