@@ -2,7 +2,7 @@ package com.developers.dranzer.data
 
 import com.developers.dranzer.MqttEventsListener
 import com.developers.dranzer.MqttManager
-import com.developers.dranzer.MqttManagerImpl.ConnectionStatus
+import com.developers.dranzer.data.DranzerRepository.StateEvent.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 
@@ -13,6 +13,7 @@ class DranzerRepository(private val mqttManager: MqttManager) : MqttEventsListen
         val setDeviceStateEvent = setDeviceStateObservable(state, device)
 
         return Observable.concat(connectMqttEvent, setDeviceStateEvent)
+            .onErrorReturn { StateSetFailure(MqttConnectionException) }
     }
 
     private fun setDeviceStateObservable(
@@ -20,8 +21,8 @@ class DranzerRepository(private val mqttManager: MqttManager) : MqttEventsListen
         device: Devices
     ): Observable<StateEvent> {
         return Single.fromCallable { mqttManager.sendMessage(state, device.getTopic()) }
-            .map<StateEvent> { StateEvent.StateSetComplete }
-            .onErrorReturn { StateEvent.StateSetFailure(it) }.toObservable()
+            .map<StateEvent> { StateSetComplete }
+            .onErrorReturn { StateSetFailure(it) }.toObservable()
     }
 
     private fun getMqttConnectionObservable(): Observable<StateEvent> {
@@ -29,13 +30,12 @@ class DranzerRepository(private val mqttManager: MqttManager) : MqttEventsListen
             .flatMap {
                 return@flatMap when {
                     it -> {
-                        Single.just(StateEvent.StateSetConnect)
+                        Single.just(StateSetConnect)
                     }
                     else -> {
                         mqttManager.init()
                         mqttManager.connect(USERNAME, PASSWORD)
-                            .map<StateEvent> { StateEvent.StateSetConnect }
-                            .onErrorReturn { throwable -> StateEvent.StateSetFailure(throwable) }
+                            .map<StateEvent> { StateSetConnect }
                     }
                 }
             }.toObservable()
@@ -55,4 +55,6 @@ class DranzerRepository(private val mqttManager: MqttManager) : MqttEventsListen
         object StateSetComplete : StateEvent()
         data class StateSetFailure(val exception: Throwable) : StateEvent()
     }
+
+    object MqttConnectionException : Throwable()
 }

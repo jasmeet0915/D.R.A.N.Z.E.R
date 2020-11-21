@@ -5,6 +5,7 @@ import com.developers.dranzer.data.Devices
 import com.developers.dranzer.data.DranzerRepository
 import com.developers.dranzer.data.DranzerRepository.Companion.PASSWORD
 import com.developers.dranzer.data.DranzerRepository.Companion.USERNAME
+import com.developers.dranzer.data.DranzerRepository.MqttConnectionException
 import com.developers.dranzer.data.DranzerRepository.StateEvent.*
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -13,6 +14,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.rxjava3.core.Single
 import org.eclipse.paho.client.mqttv3.MqttException
 import org.junit.Test
+import java.io.IOException
 
 class DranzerRepositoryTest {
 
@@ -63,7 +65,7 @@ class DranzerRepositoryTest {
         // given
         val device = Devices.ALEXA
         val state = DeviceState.ON
-        val mqttException = MqttException(Throwable("Connect First !!"))
+        val mqttException = MqttException(Throwable("Problem in sending message !!"))
         whenever(mqttManager.isConnected()).thenReturn(true)
         whenever(mqttManager.sendMessage(state, device.getTopic())).then { throw mqttException }
 
@@ -77,5 +79,21 @@ class DranzerRepositoryTest {
         verify(mqttManager, never()).init()
         verify(mqttManager, never()).connect(USERNAME, PASSWORD)
         verify(mqttManager).sendMessage(state, device.getTopic())
+    }
+
+    @Test
+    fun `when device state is set and mqtt is not connected, raise connection failure exception if fails to connect`() {
+        // given
+        val device = Devices.ALEXA
+        val deviceState = DeviceState.ON
+        whenever(mqttManager.isConnected()).thenReturn(false)
+        whenever(mqttManager.connect(USERNAME, PASSWORD)).then { throw IOException() }
+
+        // when
+        val stateObserver = dranzerRepository.setDeviceState(device, deviceState)
+            .test()
+
+        // then
+        stateObserver.assertValues(StateSetFailure(MqttConnectionException))
     }
 }
