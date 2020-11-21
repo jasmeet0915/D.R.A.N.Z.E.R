@@ -6,6 +6,7 @@ import com.developers.dranzer.data.DranzerRepository
 import com.developers.dranzer.data.DranzerRepository.Companion.PASSWORD
 import com.developers.dranzer.data.DranzerRepository.Companion.USERNAME
 import com.developers.dranzer.data.DranzerRepository.MqttConnectionException
+import com.developers.dranzer.data.DranzerRepository.MqttEvents.ConnectionLost
 import com.developers.dranzer.data.DranzerRepository.StateEvent.*
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -95,5 +96,18 @@ class DranzerRepositoryTest {
 
         // then
         stateObserver.assertValues(StateSetFailure(MqttConnectionException))
+    }
+
+    @Test
+    fun `when mqtt events are subscribed and connection is lost then emit connection lost`(){
+        // given
+        dranzerRepository.onConnectionLost(Throwable(IOException()))
+
+        // when
+        val mqttEventsObserver = dranzerRepository.getMqttEvents()
+            .test()
+
+        // then
+        mqttEventsObserver.assertValues(ConnectionLost)
     }
 }
