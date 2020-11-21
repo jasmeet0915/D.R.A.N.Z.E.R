@@ -1,14 +1,16 @@
 package com.developers.dranzer
 
-import com.developers.dranzer.MqttManagerImpl.ConnectionStatus
 import com.developers.dranzer.data.DeviceState
 import com.developers.dranzer.data.Devices
 import com.developers.dranzer.data.DranzerRepository
 import com.developers.dranzer.data.DranzerRepository.Companion.PASSWORD
 import com.developers.dranzer.data.DranzerRepository.Companion.USERNAME
-import com.developers.dranzer.data.DranzerRepository.StateEvent.StateSetComplete
-import com.developers.dranzer.data.DranzerRepository.StateEvent.StateSetFailure
-import com.nhaarman.mockitokotlin2.*
+import com.developers.dranzer.data.DranzerRepository.StateEvent.*
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import io.reactivex.rxjava3.core.Single
 import org.eclipse.paho.client.mqttv3.MqttException
 import org.junit.Test
 
@@ -22,21 +24,18 @@ class DranzerRepositoryTest {
         // given
         val device = Devices.ALEXA
         val state = DeviceState.ON
-        val onConnectAction: (status: ConnectionStatus) -> Unit = {}
         whenever(mqttManager.isConnected()).thenReturn(false)
-        whenever(mqttManager.connect(USERNAME, PASSWORD, onConnectAction)).then {
-            dranzerRepository.onConnectionSuccess(onConnectAction)
-        }
+        whenever(mqttManager.connect(USERNAME, PASSWORD)).thenReturn(Single.just(true))
 
         // when
-        val stateObserver = dranzerRepository.setState(device, state)
+        val stateObserver = dranzerRepository.setDeviceState(device, state)
             .test()
 
         // then
-        stateObserver.assertValue(StateSetComplete)
+        stateObserver.assertValues(StateSetConnect, StateSetComplete)
         verify(mqttManager).isConnected()
         verify(mqttManager).init()
-        verify(mqttManager).connect(eq(USERNAME), eq(PASSWORD), any())
+        verify(mqttManager).connect(USERNAME, PASSWORD)
         verify(mqttManager).sendMessage(state, device.getTopic())
     }
 
@@ -48,19 +47,19 @@ class DranzerRepositoryTest {
         whenever(mqttManager.isConnected()).thenReturn(true)
 
         // when
-        val stateObserver = dranzerRepository.setState(device, deviceState)
+        val stateObserver = dranzerRepository.setDeviceState(device, deviceState)
             .test()
 
         // then
-        stateObserver.assertValue(StateSetComplete)
+        stateObserver.assertValues(StateSetConnect, StateSetComplete)
         verify(mqttManager).isConnected()
         verify(mqttManager, never()).init()
-        verify(mqttManager, never()).connect(eq(USERNAME), eq(PASSWORD), any())
+        verify(mqttManager, never()).connect(USERNAME, PASSWORD)
         verify(mqttManager).sendMessage(deviceState, device.getTopic())
     }
 
     @Test
-    fun `when device state is set and message is sent, emit state failure if exception is raised`(){
+    fun `when device state is set and message is sent, emit state failure if exception is raised`() {
         // given
         val device = Devices.ALEXA
         val state = DeviceState.ON
@@ -69,12 +68,14 @@ class DranzerRepositoryTest {
         whenever(mqttManager.sendMessage(state, device.getTopic())).then { throw mqttException }
 
         // when
-        val stateObserver = dranzerRepository.setState(device, state)
+        val stateObserver = dranzerRepository.setDeviceState(device, state)
             .test()
 
         // then
-        stateObserver.assertValue(StateSetFailure(mqttException))
+        stateObserver.assertValues(StateSetConnect, StateSetFailure(mqttException))
         verify(mqttManager).isConnected()
+        verify(mqttManager, never()).init()
+        verify(mqttManager, never()).connect(USERNAME, PASSWORD)
         verify(mqttManager).sendMessage(state, device.getTopic())
     }
 }

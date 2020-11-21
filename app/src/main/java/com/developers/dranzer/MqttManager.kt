@@ -2,6 +2,9 @@ package com.developers.dranzer
 
 import android.content.Context
 import com.developers.dranzer.MqttManagerImpl.*
+import io.reactivex.rxjava3.annotations.NonNull
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 import java.io.ByteArrayOutputStream
@@ -9,17 +12,15 @@ import java.io.ObjectOutputStream
 
 interface MqttEventsListener {
     fun onConnectionLost(throwable: Throwable)
-    fun onConnectionSuccess(onConnectAction: (status: ConnectionStatus) -> Unit)
-    fun onConnectionFailure(exception: Throwable)
 }
 
 interface MqttManager {
     fun init()
     fun connect(
         username: String,
-        password: String,
-        onConnectAction: (status: ConnectionStatus) -> Unit
-    )
+        password: String
+    ): Single<Boolean>
+
     fun sendMessage(message: Any, topic: String)
     fun isConnected(): Boolean
 }
@@ -41,28 +42,30 @@ class MqttManagerImpl(
                 mqttEventListener.onConnectionLost(cause)
             }
 
-            override fun deliveryComplete(token: IMqttDeliveryToken?) { }
+            override fun deliveryComplete(token: IMqttDeliveryToken?) {}
         })
     }
 
-    override fun connect(username: String, password: String, onConnectAction: (status: ConnectionStatus) -> Unit) {
+    override fun connect(username: String, password: String): Single<Boolean> {
         val mqttConnectOptions = createMqttConnectOptions()
-        mqttAndroidClient.connect(mqttConnectOptions, null, object : IMqttActionListener {
-            override fun onSuccess(asyncActionToken: IMqttToken?) {
-                val disconnectedBufferOptions = DisconnectedBufferOptions().apply {
-                    isBufferEnabled = true
-                    bufferSize = 100
-                    isPersistBuffer = false
-                    isDeleteOldestMessages = false
+        return Single.create {
+            mqttAndroidClient.connect(mqttConnectOptions, null, object : IMqttActionListener {
+                override fun onSuccess(asyncActionToken: IMqttToken?) {
+                    val disconnectedBufferOptions = DisconnectedBufferOptions().apply {
+                        isBufferEnabled = true
+                        bufferSize = 100
+                        isPersistBuffer = false
+                        isDeleteOldestMessages = false
+                    }
+                    mqttAndroidClient.setBufferOpts(disconnectedBufferOptions)
+                    it.onSuccess(true)
                 }
-                mqttAndroidClient.setBufferOpts(disconnectedBufferOptions)
-                mqttEventListener.onConnectionSuccess(onConnectAction)
-            }
 
-            override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable) {
-                mqttEventListener.onConnectionFailure(exception)
-            }
-        })
+                override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                    it.onError(exception)
+                }
+            })
+        }
     }
 
     override fun sendMessage(message: Any, topic: String) {
