@@ -78,4 +78,11 @@ sleep 300
 # Kill the logging pid.
 kill $PROC_ID
 
+printf "Plotting temperature data and saving plot as PNG file...\n"
+
+# plot the Temperature vs Time graph using gnuplot
+gnuplot -p -e "set terminal png size 720,480; set output '~/stress_test_run_${test_run}_plot.png'; set ylabel 'Tempertaure(Celsius)'; set xlabel 'Time(s)'; set grid; plot '$test_results_file' using 1:2 with lines notitle"
+
+printf "Plot saved...\n"
+
 printf "Test complete.\n"
