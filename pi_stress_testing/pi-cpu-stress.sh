@@ -17,6 +17,7 @@ test_run=$1
 test_results_file="$PWD/stress_test_run_$test_run.log"
 stress_length=$2
 sampling_period=$3
+counter=0
 
 # Verify stress-ng is installed.
 if ! [ -x "$(command -v stress-ng)" ]; then
@@ -27,14 +28,18 @@ fi
 
 printf "Logging temperature and throttling data to: $test_results_file\n"
 
+# adding some info at beginning of log file
 test_date=$(date)
+echo "#Test number: $test_run" >> $test_results_file
+echo "#Sampling period: $sampling_period" >> $test_results_file
+echo "#Stress length: $stress_length" >> $test_results_file
 echo "#Test date: $test_date" >> $test_results_file
 echo -e "#Time\tTempertaure\tget_throttled\tCPU_frequency"
 
 # Start logging temperature data in the background.
 while /bin/true; do
   # Print the date (e.g. "Wed 13 Nov 18:24:45 GMT 2019") and a tab.
-  date +%s| tr '\n' '\t' >> $test_results_file;
+  echo $counter | tr '\n' '\t' >> $test_results_file;
 
   # Print the temperature (e.g. "39.0") and a tab.
   vcgencmd measure_temp | tr -d "temp=" | tr -d "'C" | tr '\n' '\t' >> $test_results_file;
@@ -44,7 +49,10 @@ while /bin/true; do
 
   # Print the current CPU frequency.
   vcgencmd measure_clock arm | sed 's/^.*=//' >> $test_results_file;
-  sleep 5;
+
+  ((counter=counter+sampling_period))
+
+  sleep $sampling_period;
 done &
 
 # Store the logging pid.
