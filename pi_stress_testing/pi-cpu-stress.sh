@@ -26,6 +26,13 @@ if ! [ -x "$(command -v stress-ng)" ]; then
   exit 1
 fi
 
+# Verify gnuplot is installed.
+if ! [ -x "$(command -v gnuplot)" ]; then
+  printf "Error: gnuplot is not installed.\n"
+  printf "To install: sudo apt install -y gnuplot\n" >&2
+  exit 1
+fi
+
 printf "Logging temperature and throttling data to: $test_results_file\n"
 
 # adding some info at beginning of log file
