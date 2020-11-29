@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_device_state"
+        android:title="@string/title_device_state"
+        android:icon="@drawable/sharp_home_white_24dp"/>
+
+    <item
+        android:id="@+id/navigation_health_stats"
+        android:title="@string/title_healthstats"
+        android:icon="@drawable/baseline_bar_chart_white_24dp"/>
+
+</menu>

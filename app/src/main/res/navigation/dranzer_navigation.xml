@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dranzer_navigation"
+    app:startDestination="@id/navigation_device_state">
+
+    <fragment
+        android:id="@+id/navigation_device_state"
+        android:name="com.developers.dranzer.ui.DeviceStateFragment"
+        android:label="Devices"
+        tools:layout="@layout/fragment_device_state" />
+
+    <fragment
+        android:id="@+id/navigation_health_stats"
+        android:name="com.developers.dranzer.ui.HealthStatsFragment"
+        android:label="Stats"
+        tools:layout="@layout/fragment_health_stats" />
+</navigation>
