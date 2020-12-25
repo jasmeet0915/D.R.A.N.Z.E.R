@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_device_state"
-        android:name="com.developers.dranzer.ui.DeviceStateFragment"
+        android:name="com.developers.dranzer.ui.devices.DeviceStateFragment"
         android:label="Devices"
         tools:layout="@layout/fragment_device_state" />
 

@@ -12,7 +12,7 @@ class DranzerRepository(private val mqttManager: MqttManager) : MqttEventsListen
 
     private val mqttEventSubject = BehaviorSubject.create<MqttEvents>()
 
-    fun setDeviceState(device: Devices, state: DeviceState): Observable<StateEvent> {
+    fun setDeviceState(device: Device, state: DeviceState): Observable<StateEvent> {
         val connectMqttEvent = getMqttConnectionObservable()
         val setDeviceStateEvent = setDeviceStateObservable(state, device)
 
@@ -22,7 +22,7 @@ class DranzerRepository(private val mqttManager: MqttManager) : MqttEventsListen
 
     private fun setDeviceStateObservable(
         state: DeviceState,
-        device: Devices
+        device: Device
     ): Observable<StateEvent> {
         return Single.fromCallable { mqttManager.sendMessage(state, device.getTopic()) }
             .map<StateEvent> { StateSetComplete }

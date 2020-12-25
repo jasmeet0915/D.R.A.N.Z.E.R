@@ -1,7 +1,7 @@
 package com.developers.dranzer
 
 import com.developers.dranzer.data.DeviceState
-import com.developers.dranzer.data.Devices
+import com.developers.dranzer.data.Device
 import com.developers.dranzer.data.DranzerRepository
 import com.developers.dranzer.data.DranzerRepository.Companion.PASSWORD
 import com.developers.dranzer.data.DranzerRepository.Companion.USERNAME
@@ -23,9 +23,9 @@ class DranzerRepositoryTest {
     private val dranzerRepository = DranzerRepository(mqttManager)
 
     @Test
-    fun `when device state is set, manager is initialized and connection is established if not done`() {
+    fun `when device state is set, manager is initialized and connection is established if it is already not done`() {
         // given
-        val device = Devices.ALEXA
+        val device = Device.ALEXA
         val state = DeviceState.ON
         whenever(mqttManager.isConnected()).thenReturn(false)
         whenever(mqttManager.connect(USERNAME, PASSWORD)).thenReturn(Single.just(true))
@@ -45,7 +45,7 @@ class DranzerRepositoryTest {
     @Test
     fun `when manager is already connected never call init and connect and send message directly`() {
         // given
-        val device = Devices.ALEXA
+        val device = Device.ALEXA
         val deviceState = DeviceState.ON
         whenever(mqttManager.isConnected()).thenReturn(true)
 
@@ -64,7 +64,7 @@ class DranzerRepositoryTest {
     @Test
     fun `when device state is set and message is sent, emit state failure if exception is raised`() {
         // given
-        val device = Devices.ALEXA
+        val device = Device.ALEXA
         val state = DeviceState.ON
         val mqttException = MqttException(Throwable("Problem in sending message !!"))
         whenever(mqttManager.isConnected()).thenReturn(true)
@@ -85,7 +85,7 @@ class DranzerRepositoryTest {
     @Test
     fun `when device state is set and mqtt is not connected, raise connection failure exception if fails to connect`() {
         // given
-        val device = Devices.ALEXA
+        val device = Device.ALEXA
         val deviceState = DeviceState.ON
         whenever(mqttManager.isConnected()).thenReturn(false)
         whenever(mqttManager.connect(USERNAME, PASSWORD)).then { throw IOException() }

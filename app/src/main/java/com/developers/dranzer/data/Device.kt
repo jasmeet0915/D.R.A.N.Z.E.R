@@ -4,7 +4,7 @@ interface DeviceInterface {
     fun getTopic(): String
 }
 
-enum class Devices : DeviceInterface {
+enum class Device : DeviceInterface {
     ALEXA {
         override fun getTopic(): String {
             return "workroom-alexa"
