@@ -5,6 +5,7 @@ import com.developers.dranzer.R
 interface DeviceInterface {
     fun getTopic(): String
     fun getImage(): Int
+    fun getDeviceName(): String
 }
 
 enum class Device : DeviceInterface {
@@ -16,6 +17,10 @@ enum class Device : DeviceInterface {
         override fun getImage(): Int {
             return R.drawable.baseline_mic_black_48dp
         }
+
+        override fun getDeviceName(): String {
+            return "Alexa"
+        }
     },
     ROOM_LIGHT {
         override fun getTopic(): String {
@@ -25,6 +30,10 @@ enum class Device : DeviceInterface {
         override fun getImage(): Int {
             return R.drawable.baseline_highlight_yellow_600_48dp
         }
+
+        override fun getDeviceName(): String {
+            return "Light"
+        }
     },
     ALL {
         override fun getTopic(): String {
@@ -33,6 +42,10 @@ enum class Device : DeviceInterface {
 
         override fun getImage(): Int {
             TODO("Not yet implemented")
+        }
+
+        override fun getDeviceName(): String {
+            return "all"
         }
     };
 
@@ -45,6 +58,10 @@ enum class Device : DeviceInterface {
             override fun getImage(): Int {
                 TODO("Not yet implemented")
             }
+
+            override fun getDeviceName(): String {
+                return "Extension I"
+            }
         },
         EXTENSION_TWO {
             override fun getTopic(): String {
@@ -53,6 +70,10 @@ enum class Device : DeviceInterface {
 
             override fun getImage(): Int {
                 TODO("Not yet implemented")
+            }
+
+            override fun getDeviceName(): String {
+                return "Extension II"
             }
         },
     }
@@ -66,6 +87,10 @@ enum class Device : DeviceInterface {
             override fun getImage(): Int {
                 return R.drawable.baseline_tv_white_48dp
             }
+
+            override fun getDeviceName(): String {
+                return "Monitor I"
+            }
         },
         TWO {
             override fun getTopic(): String {
@@ -74,6 +99,10 @@ enum class Device : DeviceInterface {
 
             override fun getImage(): Int {
                 return R.drawable.baseline_tv_white_48dp
+            }
+
+            override fun getDeviceName(): String {
+                return "Monitor II"
             }
         };
     }

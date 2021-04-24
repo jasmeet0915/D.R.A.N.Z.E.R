@@ -26,6 +26,7 @@ class DeviceListAdapter : ListAdapter<DranzerDevice, DeviceListViewHolder>(Devic
         fun bind(dranzerDevice: DranzerDevice) {
             val imageId = dranzerDevice.device.getImage()
             itemView.deviceImage.setImageResource(imageId)
+            itemView.deviceTitle.text = dranzerDevice.device.getDeviceName()
         }
     }
 

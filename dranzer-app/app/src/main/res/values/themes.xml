@@ -21,4 +21,14 @@
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:fontFamily">@font/gotham_bold</item>
     </style>
+
+
+    <style name="Theme.Dranzer.Text">
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">@font/gotham</item>
+    </style>
+
+    <style name="Theme.Dranzer.Text.H6">
+        <item name="android:textSize">20sp</item>
+    </style>
 </resources>
