@@ -1,15 +1,16 @@
 package com.developers.dranzer.ui
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.developers.dranzer.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.activity_dranzer.*
 
 class DranzerActivity : AppCompatActivity() {
 
@@ -29,7 +30,7 @@ class DranzerActivity : AppCompatActivity() {
 
         val navController = findNavController(R.id.nav_host_fragment)
 
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        NavigationUI.setupWithNavController(toolbar as Toolbar, navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
 
