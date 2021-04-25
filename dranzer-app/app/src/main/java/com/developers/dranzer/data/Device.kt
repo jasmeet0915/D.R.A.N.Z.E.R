@@ -15,7 +15,7 @@ enum class Device : DeviceInterface {
         }
 
         override fun getImage(): Int {
-            return R.drawable.baseline_mic_black_48dp
+            return R.drawable.ic_echo_dot
         }
 
         override fun getDeviceName(): String {
@@ -28,7 +28,7 @@ enum class Device : DeviceInterface {
         }
 
         override fun getImage(): Int {
-            return R.drawable.baseline_highlight_yellow_600_48dp
+            return R.drawable.ic_light_bulb
         }
 
         override fun getDeviceName(): String {
@@ -56,7 +56,7 @@ enum class Device : DeviceInterface {
             }
 
             override fun getImage(): Int {
-                TODO("Not yet implemented")
+                return R.drawable.ic_extension_cable
             }
 
             override fun getDeviceName(): String {
@@ -69,7 +69,7 @@ enum class Device : DeviceInterface {
             }
 
             override fun getImage(): Int {
-                TODO("Not yet implemented")
+                return R.drawable.ic_extension_cable
             }
 
             override fun getDeviceName(): String {
@@ -85,7 +85,7 @@ enum class Device : DeviceInterface {
             }
 
             override fun getImage(): Int {
-                return R.drawable.baseline_tv_white_48dp
+                return R.drawable.ic_monitor
             }
 
             override fun getDeviceName(): String {
@@ -98,7 +98,7 @@ enum class Device : DeviceInterface {
             }
 
             override fun getImage(): Int {
-                return R.drawable.baseline_tv_white_48dp
+                return R.drawable.ic_monitor
             }
 
             override fun getDeviceName(): String {
