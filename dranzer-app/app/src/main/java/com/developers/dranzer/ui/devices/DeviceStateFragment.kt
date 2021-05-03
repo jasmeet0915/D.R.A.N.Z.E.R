@@ -1,11 +1,11 @@
 package com.developers.dranzer.ui.devices
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.developers.dranzer.R
 import com.developers.dranzer.data.Device
 import com.developers.dranzer.data.DeviceState
@@ -29,10 +29,13 @@ class DeviceStateFragment : Fragment(), DeviceStateView {
         val deviceList = listOf(
             DranzerDevice(1, Device.ALEXA, DeviceState.OFF),
             DranzerDevice(2, Device.ROOM_LIGHT, DeviceState.OFF),
-            DranzerDevice(3, Device.Monitors.ONE, DeviceState.OFF)
+            DranzerDevice(3, Device.Monitors.ONE, DeviceState.OFF),
+            DranzerDevice(4, Device.Monitors.TWO, DeviceState.OFF),
+            DranzerDevice(5, Device.Extensions.EXTENSION_ONE, DeviceState.OFF),
+            DranzerDevice(6, Device.Extensions.EXTENSION_TWO, DeviceState.OFF)
         )
         deviceListAdapter.submitList(deviceList)
-        deviceRecyclerView.layoutManager = GridLayoutManager(activity, 2)
+        deviceRecyclerView.layoutManager = StaggeredGridLayoutManager(2, 1)
         deviceRecyclerView.adapter = deviceListAdapter
     }
 

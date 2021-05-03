@@ -3,4 +3,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_device_state">Device State</string>
     <string name="title_healthstats">HealthStats</string>
+    <string name="device_off_text">OFF</string>
+    <string name="device_on_text">ON</string>
 </resources>

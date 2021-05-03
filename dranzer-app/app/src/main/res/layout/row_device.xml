@@ -11,8 +11,8 @@
         android:id="@+id/deviceState"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginTop="12dp"
         android:src="@drawable/device_state_drawable"
+        app:layout_constraintBottom_toTopOf="@+id/deviceImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -36,10 +36,27 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
+        android:letterSpacing="0.1"
         android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/deviceSwitch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/deviceImage"
         tools:text="Alexa" />
+
+    <com.developers.dranzer.ui.DeviceSwitch
+        android:id="@+id/deviceSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:minHeight="30dp"
+        android:textOff="@string/device_off_text"
+        android:textOn="@string/device_on_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/deviceTitle"
+        app:switchMinWidth="100dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
