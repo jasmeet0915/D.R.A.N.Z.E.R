@@ -1,63 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="240dp"
+    android:layout_height="wrap_content"
     android:layout_margin="6dp"
-    android:background="@drawable/row_device_background">
+    android:background="@color/colorPrimary"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="6dp">
 
-    <ImageView
-        android:id="@+id/deviceState"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:src="@drawable/device_state_drawable"
-        app:layout_constraintBottom_toTopOf="@+id/deviceImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:background="@drawable/row_device_background">
 
-    <ImageView
-        android:id="@+id/deviceImage"
-        android:layout_width="wrap_content"
-        android:layout_height="80dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/deviceTitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/deviceState"
-        app:layout_constraintVertical_bias="0"
-        tools:src="@drawable/ic_echo_dot" />
+        <ImageView
+            android:id="@+id/deviceState"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/device_state_drawable"
+            app:layout_constraintBottom_toTopOf="@+id/deviceImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/deviceTitle"
-        style="@style/Theme.Dranzer.Text.H5"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:maxLines="2"
-        app:layout_constraintBottom_toTopOf="@+id/deviceSwitch"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/deviceImage"
-        tools:text="Alexa" />
+        <ImageView
+            android:id="@+id/deviceImage"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/deviceTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/deviceState"
+            app:layout_constraintVertical_bias="0"
+            tools:src="@drawable/ic_echo_dot" />
 
-    <com.developers.dranzer.ui.DeviceSwitch
-        android:id="@+id/deviceSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        android:minHeight="30dp"
-        android:textOff="@string/device_off_text"
-        android:textOn="@string/device_on_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/deviceTitle"
-        app:switchMinWidth="100dp" />
+        <TextView
+            android:id="@+id/deviceTitle"
+            style="@style/Theme.Dranzer.Text.H5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:maxLines="2"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/deviceSwitch"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/deviceImage"
+            tools:text="Alexa" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.developers.dranzer.ui.DeviceSwitch
+            android:id="@+id/deviceSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:minHeight="30dp"
+            android:textOff="@string/device_off_text"
+            android:textOn="@string/device_on_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/deviceTitle"
+            app:switchMinWidth="100dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
