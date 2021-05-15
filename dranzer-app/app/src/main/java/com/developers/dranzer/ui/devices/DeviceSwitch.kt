@@ -1,4 +1,4 @@
-package com.developers.dranzer.ui
+package com.developers.dranzer.ui.devices
 
 import android.content.Context
 import android.content.res.Resources

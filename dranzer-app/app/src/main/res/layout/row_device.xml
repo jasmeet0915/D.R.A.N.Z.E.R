@@ -52,7 +52,7 @@
             app:layout_constraintTop_toBottomOf="@+id/deviceImage"
             tools:text="Alexa" />
 
-        <com.developers.dranzer.ui.DeviceSwitch
+        <com.developers.dranzer.ui.devices.DeviceSwitch
             android:id="@+id/deviceSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
