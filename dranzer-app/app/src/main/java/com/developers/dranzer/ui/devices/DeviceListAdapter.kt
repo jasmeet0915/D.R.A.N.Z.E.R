@@ -3,6 +3,9 @@ package com.developers.dranzer.ui.devices
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.appcompat.widget.SwitchCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.developers.dranzer.R
@@ -15,6 +18,9 @@ class DeviceListAdapter : ListAdapter<DranzerDevice, DeviceListViewHolder>(Devic
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceListViewHolder {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.row_device, parent, false)
+        (view.deviceSwitch as SwitchCompat).setOnCheckedChangeListener { _, isChecked ->
+            toggleDeviceState(view.deviceState, isChecked)
+        }
         return DeviceListViewHolder(view)
     }
 
@@ -30,4 +36,19 @@ class DeviceListAdapter : ListAdapter<DranzerDevice, DeviceListViewHolder>(Devic
         }
     }
 
+    private fun toggleDeviceState(deviceStateView: ImageView, isChecked: Boolean) {
+        if (isChecked) {
+            val deviceStateOn = ContextCompat.getDrawable(
+                deviceStateView.context,
+                R.drawable.device_state_drawable_on
+            )
+            deviceStateView.deviceState.setImageDrawable(deviceStateOn)
+        } else {
+            val deviceStateOn = ContextCompat.getDrawable(
+                deviceStateView.context,
+                R.drawable.device_state_drawable_off
+            )
+            deviceStateView.deviceState.setImageDrawable(deviceStateOn)
+        }
+    }
 }
