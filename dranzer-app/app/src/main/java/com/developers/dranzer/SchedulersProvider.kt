@@ -3,6 +3,7 @@ package com.developers.dranzer
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
 interface SchedulersProvider {
     fun ui(): Scheduler
@@ -10,7 +11,7 @@ interface SchedulersProvider {
     fun computation(): Scheduler
 }
 
-class SchedulersProviderImpl : SchedulersProvider {
+class SchedulersProviderImpl @Inject constructor(): SchedulersProvider {
 
     override fun ui(): Scheduler = AndroidSchedulers.mainThread()
 

@@ -13,13 +13,15 @@ import com.developers.dranzer.data.DranzerDevice
 import com.developers.dranzer.ui.devices.DeviceListAdapter.DeviceListViewHolder
 import kotlinx.android.synthetic.main.row_device.view.*
 
-class DeviceListAdapter : ListAdapter<DranzerDevice, DeviceListViewHolder>(DeviceListDiffUtil()) {
+class DeviceListAdapter(private val onToggleChange: (isChecked: Boolean) -> Unit):
+    ListAdapter<DranzerDevice, DeviceListViewHolder>(DeviceListDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceListViewHolder {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.row_device, parent, false)
         (view.deviceSwitch as SwitchCompat).setOnCheckedChangeListener { _, isChecked ->
             toggleDeviceState(view.deviceState, isChecked)
+            onToggleChange(isChecked)
         }
         return DeviceListViewHolder(view)
     }

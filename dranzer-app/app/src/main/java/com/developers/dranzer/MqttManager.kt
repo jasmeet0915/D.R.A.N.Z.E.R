@@ -1,9 +1,6 @@
 package com.developers.dranzer
 
 import android.content.Context
-import com.developers.dranzer.MqttManagerImpl.*
-import io.reactivex.rxjava3.annotations.NonNull
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
@@ -15,7 +12,7 @@ interface MqttEventsListener {
 }
 
 interface MqttManager {
-    fun init()
+    fun init(mqttEventListener: MqttEventsListener)
     fun connect(
         username: String,
         password: String
@@ -25,16 +22,13 @@ interface MqttManager {
     fun isConnected(): Boolean
 }
 
-class MqttManagerImpl(
-    private val context: Context,
-    private val mqttEventListener: MqttEventsListener
-) : MqttManager {
+class MqttManagerImpl(private val context: Context) : MqttManager {
 
     private val mqttAndroidClient by lazy {
         MqttAndroidClient(context, SERVER_URI, DRANZER_CLIENT_ID)
     }
 
-    override fun init() {
+    override fun init(mqttEventListener: MqttEventsListener) {
         mqttAndroidClient.setCallback(object : MqttCallback {
             override fun messageArrived(topic: String?, message: MqttMessage?) {}
 
@@ -98,10 +92,5 @@ class MqttManagerImpl(
     companion object {
         private const val SERVER_URI = "SERVER_URI"
         private const val DRANZER_CLIENT_ID = "DRANZER_ANDROID_CLIENT"
-    }
-
-    enum class ConnectionStatus {
-        CONNECTED,
-        DISCONNECTED
     }
 }

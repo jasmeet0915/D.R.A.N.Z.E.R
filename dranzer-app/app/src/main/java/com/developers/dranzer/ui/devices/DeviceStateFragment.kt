@@ -1,6 +1,8 @@
 package com.developers.dranzer.ui.devices
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +12,19 @@ import com.developers.dranzer.R
 import com.developers.dranzer.data.Device
 import com.developers.dranzer.data.DeviceState
 import com.developers.dranzer.data.DranzerDevice
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_device_state.*
+import javax.inject.Inject
 
 class DeviceStateFragment : Fragment(), DeviceStateView {
 
-    private val deviceListAdapter = DeviceListAdapter()
+    @Inject
+    lateinit var deviceStatePresenter: DeviceStatePresenter
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        AndroidSupportInjection.inject(this)
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +44,9 @@ class DeviceStateFragment : Fragment(), DeviceStateView {
             DranzerDevice(5, Device.Extensions.EXTENSION_ONE, DeviceState.OFF),
             DranzerDevice(6, Device.Extensions.EXTENSION_TWO, DeviceState.OFF)
         )
+        val deviceListAdapter = DeviceListAdapter { isChecked ->
+            Log.d("DeviceState", "$isChecked")
+        }
         deviceListAdapter.submitList(deviceList)
         deviceRecyclerView.layoutManager = StaggeredGridLayoutManager(2, 1)
         deviceRecyclerView.adapter = deviceListAdapter

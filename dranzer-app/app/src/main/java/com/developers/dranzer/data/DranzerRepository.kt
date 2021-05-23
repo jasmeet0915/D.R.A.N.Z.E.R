@@ -8,7 +8,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-class DranzerRepository(private val mqttManager: MqttManager) : MqttEventsListener {
+class DranzerRepository(private val mqttManager: MqttManager) {
 
     private val mqttEventSubject = BehaviorSubject.create<MqttEvents>()
 
@@ -37,7 +37,11 @@ class DranzerRepository(private val mqttManager: MqttManager) : MqttEventsListen
                         Single.just(StateSetConnect)
                     }
                     else -> {
-                        mqttManager.init()
+                        mqttManager.init(object : MqttEventsListener {
+                            override fun onConnectionLost(throwable: Throwable) {
+                                mqttEventSubject.onNext(ConnectionLost)
+                            }
+                        })
                         mqttManager.connect(USERNAME, PASSWORD)
                             .map<StateEvent> { StateSetConnect }
                     }
@@ -48,10 +52,6 @@ class DranzerRepository(private val mqttManager: MqttManager) : MqttEventsListen
     companion object {
         internal const val USERNAME = ""
         internal const val PASSWORD = ""
-    }
-
-    override fun onConnectionLost(throwable: Throwable) {
-        mqttEventSubject.onNext(ConnectionLost)
     }
 
     fun getMqttEvents(): BehaviorSubject<MqttEvents> {
@@ -65,7 +65,7 @@ class DranzerRepository(private val mqttManager: MqttManager) : MqttEventsListen
     }
 
     sealed class MqttEvents {
-        object ConnectionLost: MqttEvents()
+        object ConnectionLost : MqttEvents()
     }
 
     object MqttConnectionException : Throwable()

@@ -8,10 +8,7 @@ import com.developers.dranzer.data.DranzerRepository.Companion.USERNAME
 import com.developers.dranzer.data.DranzerRepository.MqttConnectionException
 import com.developers.dranzer.data.DranzerRepository.MqttEvents.ConnectionLost
 import com.developers.dranzer.data.DranzerRepository.StateEvent.*
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import io.reactivex.rxjava3.core.Single
 import org.eclipse.paho.client.mqttv3.MqttException
 import org.junit.Test
@@ -37,7 +34,7 @@ class DranzerRepositoryTest {
         // then
         stateObserver.assertValues(StateSetConnect, StateSetComplete)
         verify(mqttManager).isConnected()
-        verify(mqttManager).init()
+        verify(mqttManager).init(any())
         verify(mqttManager).connect(USERNAME, PASSWORD)
         verify(mqttManager).sendMessage(state, device.getTopic())
     }
@@ -56,7 +53,7 @@ class DranzerRepositoryTest {
         // then
         stateObserver.assertValues(StateSetConnect, StateSetComplete)
         verify(mqttManager).isConnected()
-        verify(mqttManager, never()).init()
+        verify(mqttManager, never()).init(any())
         verify(mqttManager, never()).connect(USERNAME, PASSWORD)
         verify(mqttManager).sendMessage(deviceState, device.getTopic())
     }
@@ -77,7 +74,7 @@ class DranzerRepositoryTest {
         // then
         stateObserver.assertValues(StateSetConnect, StateSetFailure(mqttException))
         verify(mqttManager).isConnected()
-        verify(mqttManager, never()).init()
+        verify(mqttManager, never()).init(any())
         verify(mqttManager, never()).connect(USERNAME, PASSWORD)
         verify(mqttManager).sendMessage(state, device.getTopic())
     }
@@ -96,18 +93,5 @@ class DranzerRepositoryTest {
 
         // then
         stateObserver.assertValues(StateSetFailure(MqttConnectionException))
-    }
-
-    @Test
-    fun `when mqtt events are subscribed and connection is lost then emit connection lost`(){
-        // given
-        dranzerRepository.onConnectionLost(Throwable(IOException()))
-
-        // when
-        val mqttEventsObserver = dranzerRepository.getMqttEvents()
-            .test()
-
-        // then
-        mqttEventsObserver.assertValues(ConnectionLost)
     }
 }
