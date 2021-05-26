@@ -25,7 +25,7 @@ internal class DaggerTrackTransform(project: Project) : Transform() {
     override fun transform(transformInvocation: TransformInvocation) {
         super.transform(transformInvocation)
         val defaultClassPool = ClassPool.getDefault()
-        val classPoolManager = ClassPoolManager(defaultClassPool)
-        val classPool = classPoolManager.buildProjectClassPool(transformInvocation)
+        val classPoolFactory = ClassPoolFactory(defaultClassPool)
+        val classPool = classPoolFactory.buildProjectClassPool(transformInvocation)
     }
 }
