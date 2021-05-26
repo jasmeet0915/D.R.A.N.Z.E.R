@@ -5,6 +5,7 @@ plugins {
 
 repositories {
     jcenter()
+    mavenCentral()
     google()
 }
 
@@ -18,4 +19,5 @@ dependencies {
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+    testImplementation("com.google.truth:truth:1.1.3")
 }
