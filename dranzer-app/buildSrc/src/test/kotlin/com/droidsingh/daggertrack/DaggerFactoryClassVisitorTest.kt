@@ -17,10 +17,11 @@ internal class DaggerFactoryClassVisitorTest {
         prepareAndroidOsClock(classPool)
         prepareDaggerTrackClock(classPool)
         prepareSchedulersProvider(classPool)
+        prepareLogFile(classPool)
     }
 
     @Test
-    fun `it should visit the dagger factory classes and add initial and end system clock time`() {
+    fun `it should visit the dagger factory classes add wall clock and cpu clock logs`() {
         // given
         val schedulersProviderFactoryClass = prepareSchedulersProvidersFactoryClass(classPool)
         val daggerFactoryClass = DaggerFactoryClass(
@@ -56,9 +57,21 @@ internal class DaggerFactoryClassVisitorTest {
                 return android.os.SystemClock.getUptimeMillis();
             }
         """.trimIndent()
+        val daggerCpuTimeBody = """
+            private final long getCpuTime() {
+                return 121L;
+            }
+        """.trimIndent()
+        val daggerTrackClockCpuMethodBody = """
+            public static final long getCpuTimeMillis() {
+                return com.droidsingh.daggertrack.DaggerTrackClocks.getCpuTime();
+             }
+        """.trimIndent()
         val daggerTrackClock = "com.droidsingh.daggertrack.DaggerTrackClocks"
-        classPool.makeClass(daggerTrackClock)
-            .addMethod(daggerTrackClockMethodBody)
+        val daggerClock = classPool.makeClass(daggerTrackClock)
+        daggerClock.addMethod(daggerTrackClockMethodBody)
+        daggerClock.addMethod(daggerCpuTimeBody)
+        daggerClock.addMethod(daggerTrackClockCpuMethodBody)
     }
 
     private fun prepareSchedulersProvider(classPool: ClassPool) {
@@ -84,6 +97,15 @@ internal class DaggerFactoryClassVisitorTest {
         schedulersProviderFactoryClass.addMethod(newInstanceMethodBody)
         schedulersProviderFactoryClass.addMethod(getSchedulersProviderBody)
         return schedulersProviderFactoryClass
+    }
+
+    private fun prepareLogFile(classPool: ClassPool) {
+        classPool.makeClass("android.util.Log")
+            .addMethod("""
+                public static void d(String tag, String msg) {
+                    // prints here
+                }
+            """.trimIndent())
     }
 }
 
