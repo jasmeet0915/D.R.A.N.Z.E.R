@@ -1,16 +1,22 @@
 package com.droidsingh.daggertrack
 
 import com.droidsingh.daggertrack.models.DaggerFactoryClass
+import com.droidsingh.daggertrack.utils.addSubcomponentAnnotation
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import javassist.ClassPool
 import javassist.CtClass
 import javassist.CtMethod
+import javassist.bytecode.AnnotationsAttribute
+import javassist.bytecode.annotation.Annotation
 import org.junit.Test
 import java.io.File
 
 internal class CtClassTransformationsTest {
+
+    private val classPool = ClassPool.getDefault()
+
     @Test
     fun `it filters out only dagger factory classes`() {
         // given
@@ -49,7 +55,6 @@ internal class CtClassTransformationsTest {
     @Test
     fun `it filters out dagger components`() {
         // given
-        val classPool = ClassPool.getDefault()
         classPool.makeClass("android.app.Application")
         classPool.makeClass("com.developers.dranzer.app.DranzerApp")
         classPool.makeClass("dagger.BindsInstance")
@@ -85,5 +90,52 @@ internal class CtClassTransformationsTest {
         // then
         val daggerComponentNames = daggerComponents.map { it.name }
         assertThat(daggerComponentNames).containsExactly("DaggerApplicationComponent")
+    }
+
+    @Test
+    fun `it filters out all the subcomponents of component`() {
+        // given
+        val homeActivitySubcomponentImpl = classPool.makeClass(
+            "com.droidsingh.daggertrack.di.components.HomeActivitySubcomponentImpl"
+        )
+        val homeFragmentSubcomponentImpl = classPool.makeClass(
+            "com.droidsingh.daggertrack.di.components.HomeFragmentSubcomponentImpl"
+        )
+        // for convenience lets assume subcomponent class is static
+        // dagger does not create static subcomponents
+        // javassist does not supports to create non-static classes
+        val homeFragmentNestedSubcomponentImpl = homeActivitySubcomponentImpl.makeNestedClass(
+            homeFragmentSubcomponentImpl.name,
+            true
+        )
+        prepareHomeActivity(homeActivitySubcomponentImpl)
+        prepareHomeFragment(homeFragmentNestedSubcomponentImpl)
+        val applicationComponent = mock<CtClass>()
+        whenever(applicationComponent.nestedClasses).thenReturn(arrayOf(homeActivitySubcomponentImpl))
+
+        // when
+        val subComponentCtClassList = applicationComponent.filterSubcomponents()
+
+        // then
+        val subcomponentListNames = subComponentCtClassList.map { it.name }
+        assertThat(subcomponentListNames).containsExactly(
+            homeActivitySubcomponentImpl.name, homeFragmentNestedSubcomponentImpl.name
+        )
+    }
+
+    private fun prepareHomeActivity(homeActivitySubcomponentImpl: CtClass) {
+        val homeActivitySubcomponent = classPool.makeInterface(
+            "com.droidsingh.daggertrack.di.components.HomeActivitySubcomponent"
+        )
+        homeActivitySubcomponentImpl.addInterface(homeActivitySubcomponent)
+        homeActivitySubcomponent.addSubcomponentAnnotation()
+    }
+
+    private fun prepareHomeFragment(homeFragmentNestedSubcomponentImpl: CtClass) {
+        val homeFragmentSubcomponent = classPool.makeInterface(
+            "com.droidsingh.daggertrack.di.components.HomeFragmentSubcomponent"
+        )
+        homeFragmentNestedSubcomponentImpl.addInterface(homeFragmentSubcomponent)
+        homeFragmentSubcomponent.addSubcomponentAnnotation()
     }
 }
