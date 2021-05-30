@@ -23,3 +23,12 @@ dependencies {
     testImplementation("org.mockito:mockito-inline:3.1.0")
     testImplementation("org.mockito:mockito-core:3.5.10")
 }
+
+gradlePlugin {
+    plugins {
+        create("dagger-track") {
+            id = "com.droidsingh.daggertrack"
+            implementationClass = "com.droidsingh.daggertrack.DaggerTrackPlugin"
+        }
+    }
+}
