@@ -1,6 +1,7 @@
 package com.developers.dranzer.di
 
 import android.content.Context
+import androidx.fragment.app.Fragment
 import com.developers.dranzer.MqttEventsListener
 import com.developers.dranzer.MqttManager
 import com.developers.dranzer.MqttManagerImpl
@@ -12,10 +13,13 @@ import com.developers.dranzer.ui.devices.DeviceStateFragment
 import com.developers.dranzer.ui.devices.DeviceStatePresenter
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 import javax.inject.Qualifier
 
 @Module
-class DevicesModule {
+@InstallIn(FragmentComponent::class)
+object DevicesModule {
 
     @Provides
     fun providesDranzerRepository(@DeviceMqttManager mqttManager: MqttManager): DranzerRepository {
@@ -32,10 +36,10 @@ class DevicesModule {
 
     @Provides
     fun providesDevicePresenter(
-        view: DeviceStateFragment,
+        view: Fragment,
         setDeviceStateUseCase: SetDeviceStateUseCase
     ): DeviceStatePresenter {
-        return DeviceStatePresenter(view, setDeviceStateUseCase)
+        return DeviceStatePresenter(view as DeviceStateFragment, setDeviceStateUseCase)
     }
 
     @Provides

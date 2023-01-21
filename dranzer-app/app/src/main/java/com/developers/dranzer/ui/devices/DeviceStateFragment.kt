@@ -1,6 +1,5 @@
 package com.developers.dranzer.ui.devices
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,19 +11,15 @@ import com.developers.dranzer.R
 import com.developers.dranzer.data.Device
 import com.developers.dranzer.data.DeviceState
 import com.developers.dranzer.data.DranzerDevice
-import dagger.android.support.AndroidSupportInjection
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_device_state.*
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class DeviceStateFragment : Fragment(), DeviceStateView {
 
     @Inject
     lateinit var deviceStatePresenter: DeviceStatePresenter
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        AndroidSupportInjection.inject(this)
-    }
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,

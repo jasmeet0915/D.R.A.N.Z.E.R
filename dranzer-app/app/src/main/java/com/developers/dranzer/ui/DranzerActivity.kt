@@ -10,17 +10,11 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.developers.dranzer.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dagger.android.AndroidInjection
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_dranzer.*
-import javax.inject.Inject
 
-class DranzerActivity : AppCompatActivity(), HasAndroidInjector {
-
-    @Inject
-    internal lateinit var androidInjector: DispatchingAndroidInjector<Any>
+@AndroidEntryPoint
+class DranzerActivity : AppCompatActivity() {
 
     private val appBarConfiguration by lazy {
         AppBarConfiguration(
@@ -32,7 +26,6 @@ class DranzerActivity : AppCompatActivity(), HasAndroidInjector {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dranzer)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
@@ -46,9 +39,5 @@ class DranzerActivity : AppCompatActivity(), HasAndroidInjector {
     override fun onSupportNavigateUp(): Boolean {
         return findNavController(R.id.nav_host_fragment).navigateUp(appBarConfiguration) ||
                 return super.onSupportNavigateUp()
-    }
-
-    override fun androidInjector(): AndroidInjector<Any> {
-        return androidInjector
     }
 }

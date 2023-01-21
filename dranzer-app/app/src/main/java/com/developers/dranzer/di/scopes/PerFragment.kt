@@ -1,6 +1,6 @@
 package com.developers.dranzer.di.scopes
 
-import javax.inject.Scope
-
-@Scope
-internal annotation class PerFragment
+//import javax.inject.Scope
+//
+//@Scope
+//internal annotation class PerFragment
