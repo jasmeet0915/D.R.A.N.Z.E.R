@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.developers.dranzer.R
 import com.developers.dranzer.data.DranzerDevice
 import com.developers.dranzer.ui.devices.DeviceListAdapter.DeviceListViewHolder
-import kotlinx.android.synthetic.main.row_device.view.*
 
 class DeviceListAdapter(private val onToggleChange: (isChecked: Boolean) -> Unit):
     ListAdapter<DranzerDevice, DeviceListViewHolder>(DeviceListDiffUtil()) {
@@ -19,10 +18,10 @@ class DeviceListAdapter(private val onToggleChange: (isChecked: Boolean) -> Unit
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceListViewHolder {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.row_device, parent, false)
-        (view.deviceSwitch as SwitchCompat).setOnCheckedChangeListener { _, isChecked ->
-            toggleDeviceState(view.deviceState, isChecked)
-            onToggleChange(isChecked)
-        }
+//        (view.deviceSwitch as SwitchCompat).setOnCheckedChangeListener { _, isChecked ->
+//            toggleDeviceState(view.deviceState, isChecked)
+//            onToggleChange(isChecked)
+//        }
         return DeviceListViewHolder(view)
     }
 
@@ -33,8 +32,8 @@ class DeviceListAdapter(private val onToggleChange: (isChecked: Boolean) -> Unit
     inner class DeviceListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(dranzerDevice: DranzerDevice) {
             val imageId = dranzerDevice.device.getImage()
-            itemView.deviceImage.setImageResource(imageId)
-            itemView.deviceTitle.text = dranzerDevice.device.getDeviceName()
+            //itemView.deviceImage.setImageResource(imageId)
+            //itemView.deviceTitle.text = dranzerDevice.device.getDeviceName()
         }
     }
 
@@ -44,13 +43,13 @@ class DeviceListAdapter(private val onToggleChange: (isChecked: Boolean) -> Unit
                 deviceStateView.context,
                 R.drawable.device_state_drawable_on
             )
-            deviceStateView.deviceState.setImageDrawable(deviceStateOn)
+            //deviceStateView.deviceState.setImageDrawable(deviceStateOn)
         } else {
             val deviceStateOn = ContextCompat.getDrawable(
                 deviceStateView.context,
                 R.drawable.device_state_drawable_off
             )
-            deviceStateView.deviceState.setImageDrawable(deviceStateOn)
+            //deviceStateView.deviceState.setImageDrawable(deviceStateOn)
         }
     }
 }

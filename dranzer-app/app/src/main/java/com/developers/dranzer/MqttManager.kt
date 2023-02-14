@@ -55,7 +55,7 @@ class MqttManagerImpl(private val context: Context) : MqttManager {
                     it.onSuccess(true)
                 }
 
-                override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
                     it.onError(exception)
                 }
             })

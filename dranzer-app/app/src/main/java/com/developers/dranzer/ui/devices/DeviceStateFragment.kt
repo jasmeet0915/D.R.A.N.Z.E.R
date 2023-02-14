@@ -6,20 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.developers.dranzer.R
 import com.developers.dranzer.data.Device
 import com.developers.dranzer.data.DeviceState
 import com.developers.dranzer.data.DranzerDevice
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_device_state.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class DeviceStateFragment : Fragment(), DeviceStateView {
-
-    @Inject
-    lateinit var deviceStatePresenter: DeviceStatePresenter
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -42,9 +37,9 @@ class DeviceStateFragment : Fragment(), DeviceStateView {
         val deviceListAdapter = DeviceListAdapter { isChecked ->
             Log.d("DeviceState", "$isChecked")
         }
-        deviceListAdapter.submitList(deviceList)
-        deviceRecyclerView.layoutManager = StaggeredGridLayoutManager(2, 1)
-        deviceRecyclerView.adapter = deviceListAdapter
+//        deviceListAdapter.submitList(deviceList)
+//        deviceRecyclerView.layoutManager = StaggeredGridLayoutManager(2, 1)
+//        deviceRecyclerView.adapter = deviceListAdapter
     }
 
     override fun setDeviceState(state: DeviceState) {
