@@ -11,8 +11,8 @@ private interface RetrofitWeatherApi {
 
     @GET("/weather")
     suspend fun getCurrentWeather(
-        @Query("lat") latitude: Float,
-        @Query("lon") longitude: Float,
+        @Query("lat") latitude: Double,
+        @Query("lon") longitude: Double,
         @Query("appid") apiKey: String
     ): CurrentWeatherData
 }
@@ -33,7 +33,7 @@ class NetworkWeatherApi : WeatherApi {
     }
     private val weatherApiInterface by lazy { retrofit.create(RetrofitWeatherApi::class.java) }
 
-    override suspend fun getCurrentWeather(latitude: Float, longitude: Float): CurrentWeatherData {
+    override suspend fun getCurrentWeather(latitude: Double, longitude: Double): CurrentWeatherData {
         return weatherApiInterface.getCurrentWeather(latitude, longitude, "")
     }
 

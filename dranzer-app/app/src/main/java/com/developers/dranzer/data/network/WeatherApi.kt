@@ -4,5 +4,5 @@ import com.developers.dranzer.data.models.CurrentWeatherData
 
 interface WeatherApi {
 
-    suspend fun getCurrentWeather(latitude: Float, longitude: Float): CurrentWeatherData
+    suspend fun getCurrentWeather(latitude: Double, longitude: Double): CurrentWeatherData
 }

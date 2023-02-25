@@ -18,8 +18,8 @@ class WeatherRepositoryTest {
 
         // when
         val currentWeatherData = WeatherRepository(fakeWeatherApi).getCurrentWeather(
-            latitude = 23.43f,
-            longitude = 42.32f
+            latitude = 23.43,
+            longitude = 42.32
         )
 
         // then
@@ -66,5 +66,19 @@ class WeatherRepositoryTest {
                 )
             )
         )
+    }
+
+    @Test
+    fun `it results in failure when fetch fails`()  = runBlocking {
+        // given
+        val weatherApi = FakeWeatherApi("./src/test/incorrect_response.json")
+
+        // when
+        val result = WeatherRepository(weatherApi).getCurrentWeather(
+            latitude = 23.32, longitude =  44.34
+        )
+
+        // then
+        assertThat(result.getOrNull()).isEqualTo(null)
     }
 }

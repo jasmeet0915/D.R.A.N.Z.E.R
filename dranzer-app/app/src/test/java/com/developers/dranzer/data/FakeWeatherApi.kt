@@ -7,7 +7,7 @@ import java.io.File
 
 class FakeWeatherApi(private val fakeDataSource: String): WeatherApi {
 
-    override suspend fun getCurrentWeather(latitude: Float, longitude: Float): CurrentWeatherData {
+    override suspend fun getCurrentWeather(latitude: Double, longitude: Double): CurrentWeatherData {
         val response = File(fakeDataSource).readBytes()
         return ObjectMapper().readValue(response, CurrentWeatherData::class.java)
     }
