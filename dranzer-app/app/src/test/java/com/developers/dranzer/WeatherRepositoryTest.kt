@@ -3,6 +3,8 @@ package com.developers.dranzer
 import com.developers.dranzer.data.FakeWeatherApi
 import com.developers.dranzer.data.WeatherRepository
 import com.developers.dranzer.data.models.*
+import com.github.michaelbull.result.Err
+import com.github.michaelbull.result.Ok
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -48,7 +50,7 @@ class WeatherRepositoryTest {
             sunset = 1677415690
         )
         assertThat(currentWeatherData).isEqualTo(
-            Result.success(
+            Ok(
                 CurrentWeatherData(
                     coord = coord,
                     weather = listOf(weather),
@@ -79,6 +81,6 @@ class WeatherRepositoryTest {
         )
 
         // then
-        assertThat(result.getOrNull()).isEqualTo(null)
+        assertThat(result).isInstanceOf(Err::class.java)
     }
 }
